@@ -1,0 +1,163 @@
+import 'package:camtu_app/model/Room.dart';
+import 'package:camtu_app/model/UserAccount.dart';
+import 'package:camtu_app/view/component/room/ComponentRoom.dart';
+import 'package:camtu_app/view/component/home/MenuBottom.dart';
+import 'package:camtu_app/view/component/home/TabNavigator.dart';
+import 'package:camtu_app/view/component/turple/TupleQuotes.dart';
+import 'package:camtu_app/view/page/ListRoomPage.dart';
+import 'package:camtu_app/view/page/PersonalPage.dart';
+import 'package:camtu_app/view/component/room/SystemRoomPage.dart';
+import 'package:camtu_app/view/services/UserServices.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+
+class HomePage extends StatefulWidget {
+  final UserAccount user;
+  const HomePage(this.user) ;
+
+  @override
+  _HomePageState createState() => _HomePageState(this.user);
+}
+
+
+
+class _HomePageState extends State<HomePage> {
+  UserAccount user ;
+  _HomePageState(this.user) {
+
+    List<Widget> pages = [
+      new ListRoomPage(),
+      new Scaffold(
+          appBar: AppBar(
+            title: Text('Chat'),
+          )),
+      new Scaffold(
+        appBar: AppBar(
+          title: Text('Thông báo'),
+        ),
+        backgroundColor: Colors.yellowAccent,
+      ),
+      new PersonalPage(user),
+    ];
+
+  }
+  String _currentPage = "Page1";
+  List<String> pageKeys = ["Page1", "Page2", "Page3", "Page4", "Page5"];
+  Map<String, GlobalKey<NavigatorState>> _navigatorKeys = {
+    "Page1": GlobalKey<NavigatorState>(),
+    "Page2": GlobalKey<NavigatorState>(),
+    "Page3": GlobalKey<NavigatorState>(),
+    "Page4": GlobalKey<NavigatorState>(),
+    "Page5": GlobalKey<NavigatorState>(),
+  };
+  int _selectedIndex = 0;
+  PageController _pageController = new PageController();
+
+  @override
+  void initState() {
+    super.initState();
+    _pageController = new PageController();
+    if(this.user==null){
+      Navigator.of(context).pop();
+      Navigator.popAndPushNamed(context, "/");
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    print(this.user.toString());
+    return WillPopScope(
+      onWillPop: ()async{
+     return await   AccountServices().logout(context);
+      },
+      child: Scaffold(
+
+          body: Stack(children: <Widget>[
+            _buildOffstageNavigator("Page1"),
+            _buildOffstageNavigator("Page2"),
+            _buildOffstageNavigator("Page3"),
+            _buildOffstageNavigator("Page4"),
+            _buildOffstageNavigator("Page5"),
+          ]),
+          bottomNavigationBar: Container(
+            height: 70,
+            decoration: BoxDecoration(boxShadow: [
+              BoxShadow(
+                color: Colors.grey[400],
+                blurRadius: 1,
+              )
+            ]),
+            child: BottomNavigationBar(
+              showSelectedLabels: true,
+              showUnselectedLabels: true,
+
+              selectedItemColor: Colors.lightBlue,
+              unselectedItemColor: Colors.grey[600],
+              elevation: 50,
+              currentIndex: _selectedIndex,
+              backgroundColor: const Color(0xFFFFFFFF),
+              type: BottomNavigationBarType.fixed,
+              items: [ BottomNavigationBarItem(
+                  icon: Icon(Icons.house, size: 30),
+                  title: Text(
+                    "Room",
+                    style: TextStyle(fontSize: 14),
+                  )),
+                BottomNavigationBarItem(
+                    icon: Icon(
+                      Icons.chat,
+                      size: 30,
+                    ),
+                    title: Text(
+                      "Chat",
+                      style: TextStyle(fontSize: 14),
+                    )),
+                BottomNavigationBarItem(
+                    icon: Icon(Icons.notifications_active_outlined, size: 30),
+                    title: Text(
+                      "Thông báo",
+                      style: TextStyle(fontSize: 14),
+                    )),
+                BottomNavigationBarItem(
+                    icon: Icon(Icons.person_pin, size: 30),
+                    title: Text(
+                      "Tài khoản",
+                      style: TextStyle(fontSize: 14),
+                    )),],
+              onTap: (int index) {
+                _selectTab(pageKeys[index], index);
+              },
+            ),
+          )),
+    );
+  }
+
+  // onTap: (index) {
+  // setState(() {
+  // _selectedIndex = index;
+  // _pageController.animateToPage(index,
+  // duration: Duration(milliseconds: 300),
+  // curve: Curves.easeIn);
+  // });
+  // }
+  Widget _buildOffstageNavigator(String tabItem) {
+    return Offstage(
+      offstage: _currentPage != tabItem,
+      child: TabNavigator(
+        navigatorKey: _navigatorKeys[tabItem],
+        tabItem: tabItem,
+        user: this.user,
+      ),
+    );
+  }
+  void _selectTab(String tabItem, int index) {
+    if (tabItem == _currentPage) {
+      _navigatorKeys[tabItem].currentState.popUntil((route) => route.isFirst);
+    } else {
+      setState(() {
+        _currentPage = pageKeys[index];
+        _selectedIndex = index;
+      });
+    }
+  }
+}

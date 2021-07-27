@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "553480524418",
+    "project_id": "camtu-project",
+    "storage_bucket": "camtu-project.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:553480524418:android:8f206fed7f82b541339a9b",
+        "android_client_info": {
+          "package_name": "com.example.camtu_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "553480524418-2an5secmlm5smge0amhmp3lugks48711.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.camtu_app",
+            "certificate_hash": "83ae8c5b7bf683804e8e862880cd66d1fd9f4290"
+          }
+        },
+        {
+          "client_id": "553480524418-60evf6nlt14r2jmb5lbehfg4i06r03lo.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBOoxnFxkCWyQ7SOvcN2mkauKZAsjYgEBo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "553480524418-60evf6nlt14r2jmb5lbehfg4i06r03lo.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
