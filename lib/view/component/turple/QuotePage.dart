@@ -8,7 +8,6 @@ import 'package:camtu_app/view/component/turple/ImplementQuoteComponent.dart';
 import 'package:camtu_app/view/component/static/Dialog.dart';
 import 'package:camtu_app/view/services/QuoteServices.dart';
 import 'package:camtu_app/view/services/RoomServices.dart';
-import 'package:camtu_app/view/services/UserServices.dart';
 import 'package:flutter/material.dart';
 
 class QuotePage extends StatefulWidget {
@@ -53,13 +52,6 @@ class _QuotePageState extends State<QuotePage>
     _tabController = new TabController(vsync: this, length: this.turple.number);
   }
 
-  List<Widget> createQuote() {
-    List<Widget> listTab = new List<Widget>();
-    for (int i = 1; i < 20; i++) {
-      // listTab.add(ImplementQuote());
-    }
-    return listTab;
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -254,41 +246,41 @@ class _QuotePageState extends State<QuotePage>
                           ShowDialog().showDialogWidget(context, 'confirm',
                               'Bạn có muốn thực hiện nộp bài tập, sau khi nộp không thể chỉnh sửa?', () {
                             if (validateIml()) {
-                              RoomServices()
-                                  .saveQuote(
-                                      this.turple.roomId,
-                                      this.turple.id,
-                                      listImpl.map<Quote>((e) {
-                                        return e.state.getQuote();
-                                      }).toList(),
-                                      false)
-                                  .then((value) {
-                                if (value) {
-                                  print(this.turple.id);
-                                  print(this.turple.roomId);
-                                  RoomServices()
-                                      .setStateTurpleUser(
-                                          this.turple.roomId,
-                                          this.user.phoneNo,
-                                          this.turple.id,
-                                          'complete')
-                                      .then((value) {
-                                    if (value) {
-                                      Navigator.of(context).pop();
-                                      ShowDialog().showToast(
-                                          "Nộp bài thành công", context);
-                                    } else {
-                                      ShowDialog().showToast(
-                                          "Có lỗi xảy ra vui lòng thử lại",
-                                          context);
-                                    }
-                                  });
-                                } else {
-                                  ShowDialog().showToast(
-                                      "Có lỗi xảy ra, vui lòng thử lại",
-                                      context);
-                                }
-                              });
+                            //   RoomServices()
+                            //       .saveQuote(
+                            //           this.turple.roomId,
+                            //           this.turple.id,
+                            //           listImpl.map<Quote>((e) {
+                            //             return e.state.getQuote();
+                            //           }).toList(),
+                            //           false)
+                            //       .then((value) {
+                            //     if (value) {
+                            //       print(this.turple.id);
+                            //       print(this.turple.roomId);
+                            //       RoomServices()
+                            //           .setStateTurpleUser(
+                            //               this.turple.roomId,
+                            //               this.user.phoneNo,
+                            //               this.turple.id,
+                            //               'complete')
+                            //           .then((value) {
+                            //         if (value) {
+                            //           Navigator.of(context).pop();
+                            //           ShowDialog().showToast(
+                            //               "Nộp bài thành công", context);
+                            //         } else {
+                            //           ShowDialog().showToast(
+                            //               "Có lỗi xảy ra vui lòng thử lại",
+                            //               context);
+                            //         }
+                            //       });
+                            //     } else {
+                            //       ShowDialog().showToast(
+                            //           "Có lỗi xảy ra, vui lòng thử lại",
+                            //           context);
+                            //     }
+                            //   });
                             }
                           });
                         } else {
@@ -431,8 +423,14 @@ class _QuotePageState extends State<QuotePage>
   }
 
   validateIml() {
+    print(listImpl.length);
+
+    print('---------');
+    print(listImpl2.length);
+    print(listImpl2);
     for (var i = 0; i < listImpl2.length; i++) {
-      if (i <= (listImpl.length - 1)) {
+      print(listImpl2[i]);
+      if (i <= (listImpl.length - 1)&&listImpl[i].state.getQuote().id==listImpl2[i].id) {      print(listImpl[i].state.getQuote());
         if (!validateQuoteAnswer(listImpl[i].state.getQuote())) {
           initTab(i);
           ShowDialog().showToast("Bạn chưa chọn đáp án cho câu này", context);

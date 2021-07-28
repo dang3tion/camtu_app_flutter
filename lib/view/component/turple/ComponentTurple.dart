@@ -315,7 +315,7 @@ class _ComponentTurpleState extends State<ComponentTurple> {
                                       showModalBottom();
                                     }else{
                                       Navigator.push(context, MaterialPageRoute(builder: (context){
-                                        return GradeBoard(this.turple.roomId);
+                                        return GradeBoard(this.turple);
                                       }));
                                     }
 

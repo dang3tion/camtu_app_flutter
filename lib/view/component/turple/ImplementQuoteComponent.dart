@@ -26,7 +26,7 @@ class _ImplementQuoteState extends State<ImplementQuote>   with AutomaticKeepAli
     this.index=this.quote.index;
 
   }
-  getQuote(){
+  Quote getQuote(){
       quote.index=index;
       return quote;
   }

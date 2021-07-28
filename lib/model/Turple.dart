@@ -14,14 +14,14 @@ class Turple {
   List<Quote> quotes=[];
   List<DetailWork> deatailWorks=[];
   Turple(
-      {@required this.id,@required this.name,
-      @required this.roomId,
-      @required this.number,
-      @required this.deadLine,
-      @required this.userId,
-      @required this.bornLine,
-      @required this.state,
-      @required this.quotes,@required this.deatailWorks});
+      { this.id, this.name,
+       this.roomId,
+      this.number,
+       this.deadLine,
+      this.userId,
+      this.bornLine,
+      this.state,
+       this.quotes,this.deatailWorks});
 
   DateTime getUpDate() {
     return DateTime.parse(this.bornLine);

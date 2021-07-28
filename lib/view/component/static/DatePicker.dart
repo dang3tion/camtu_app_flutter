@@ -40,7 +40,7 @@ class _DatePickerButtonState extends State<DatePickerButton> {
   String _date = "Chưa chọn";
 
   _DatePickerButtonState(
-      this.label, this.date, this.maxdate, this.mindate, this.timea) {}
+      this.label, this.date, this.maxdate, this.mindate, this.timea);
 
   String getDate() {
     if (_date == "Chưa chọn") {

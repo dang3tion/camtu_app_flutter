@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:camtu_app/model/DetailWork.dart';
 import 'package:camtu_app/model/Quote.dart';
 import 'package:camtu_app/model/Room.dart';
+import 'package:camtu_app/model/ScoreDetail.dart';
 import 'package:camtu_app/model/Turple.dart';
 import 'package:camtu_app/model/UserAccount.dart';
 import 'package:camtu_app/view/services/QuoteServices.dart';
@@ -20,10 +21,6 @@ class RoomServices {
         String.fromCharCode((rng.nextInt(25) + 65)) +
         ((rng.nextInt(9999) + 1000)).toString();
   }
-
-
-
-
 
   Future<bool> isRoomExists(idRoom) async {
     return await room.doc(idRoom).get().then((value) {
@@ -62,16 +59,26 @@ class RoomServices {
       return false;
     });
   }
-  Stream<List<Quote>> getQuoteUser(roomId,turpleId,userId){
-    return this.room.doc(roomId).collection('MemberUser').doc(userId).collection("Turple").doc(turpleId)
-        .collection("Quote").snapshots().map((event) {
-        List<Quote> listQuote=[];
-        event.docs.forEach((element) {
-          listQuote.add(new Quote(id: element.id,index: element.get('index')));
-        });
-        return listQuote;
+
+  Stream<List<Quote>> getQuoteUser(roomId, turpleId, userId) {
+    return this
+        .room
+        .doc(roomId)
+        .collection('MemberUser')
+        .doc(userId)
+        .collection("Turple")
+        .doc(turpleId)
+        .collection("Quote")
+        .snapshots()
+        .map((event) {
+      List<Quote> listQuote = [];
+      event.docs.forEach((element) {
+        listQuote.add(new Quote(id: element.id, index: element.get('index')));
+      });
+      return listQuote;
     });
   }
+
   Stream<List<Stream<Quote>>> getQuote(turpleId, roomId, userId) {
     return this
         .room
@@ -95,18 +102,21 @@ class RoomServices {
       return list;
     });
   }
-  Stream<Turple> getState(String roomId, String userId, String turpleId){
-       return  this
+
+  Stream<Turple> getState(String roomId, String userId, String turpleId) {
+    return this
         .room
         .doc(roomId)
         .collection("MemberUser")
         .doc(userId)
         .collection("Turple")
-        .doc(turpleId).snapshots().map((event){
-          return Turple(state: event['state']);
-       });
-
+        .doc(turpleId)
+        .snapshots()
+        .map((event) {
+      return Turple(state: event['state']);
+    });
   }
+
   Future<bool> setStateTurpleUser(
       String roomId, String userId, String turpleId, String state) async {
     return await this
@@ -116,7 +126,7 @@ class RoomServices {
         .doc(userId)
         .collection("Turple")
         .doc(turpleId)
-        .set({"state": state,"updateTime:":DateTime.now().toString()})
+        .set({"state": state, "updateTime": DateTime.now().toString()})
         .then((value) => true)
         .catchError((onError) => false);
   }
@@ -155,13 +165,47 @@ class RoomServices {
       return true;
     });
   }
+
+  Future<bool> saveQuoteNew(
+      userId, roomId, turpleId, List<Quote> quote, type) async {
+    return await this
+        .room
+        .doc(roomId)
+        .collection("MemberUser")
+        .doc(userId)
+        .get()
+        .then((snap) {
+      quote.asMap().forEach((index, value) async {
+        Map<String, dynamic> map = {'index': -1};
+        if (type) {
+          await snap.reference
+              .collection("Turple")
+              .doc(turpleId)
+              .set({'state': 'ready'});
+        }
+        bool war = await snap.reference
+            .collection("Turple")
+            .doc(turpleId)
+            .collection("Quote")
+            .doc(value.id)
+            .set(map)
+            .then((value) => true)
+            .catchError((onError) => false);
+        if (war == false) {
+          return false;
+        }
+      });
+      return true;
+    });
+  }
+
   Future<bool> setStateTurple(turpleId, roomId, state) async {
     return await this
         .room
         .doc(roomId)
         .collection("Turple")
         .doc(turpleId)
-        .set({'state': state,'updatetime':DateTime.now().toString()})
+        .set({'state': state, 'updatetime': DateTime.now().toString()})
         .then((value) => true)
         .catchError((onError) => false);
   }
@@ -171,6 +215,22 @@ class RoomServices {
       List<Stream<Turple>> listTup = [];
       doc.docs.forEach((va) {
         listTup.add(TurpleServices().getTurple(va.id, va.get("state")));
+      });
+      return listTup;
+    });
+  }
+
+  Future<List<String>> getListTurpleCompleteId(roomId) {
+    return this
+        .room
+        .doc(roomId)
+        .collection("Turple")
+        .where('state', isEqualTo: 'complete')
+        .get()
+        .then((doc) {
+      List<String> listTup = [];
+      doc.docs.forEach((va) {
+        listTup.add(va.id);
       });
       return listTup;
     });
@@ -273,6 +333,34 @@ class RoomServices {
     }
   }
 
+  Stream<List<Stream<ScoreDetail>>> getListScore(idRoom, idTurple) {
+    return room
+        .doc(idRoom)
+        .collection("MemberUser")
+        .where('permission', isEqualTo: 'member')
+        .snapshots()
+        .map((doc) {
+      List<Stream<ScoreDetail>> list = [];
+      doc.docs.forEach((element) {
+        list.add(element.reference
+            .collection('Turple')
+            .doc(idTurple)
+            .snapshots()
+            .map((event) {
+          if (event.get('state').toString() == 'complete') {
+            return ScoreDetail(
+                userId: element.id,
+                state: event.get('state'),
+                upDate: event.get('updateTime'));
+          } else {
+            return ScoreDetail(userId: element.id, state: event.get('state'));
+          }
+        }));
+      });
+      return list;
+    });
+  }
+
   Future<bool> createRoom(userId, name, nameRoom, phoneNo) async {
     var idDoc = await createUniqueID();
     var date = new DateTime.now();
@@ -292,6 +380,28 @@ class RoomServices {
         return false;
       });
     }).catchError((err) => false);
+  }
+
+  Future<bool> saveQuoteUser(roomId, userId) async {
+    return await getListTurpleCompleteId(roomId).then((value) {
+      value.forEach((element) async {
+        await room
+            .doc(roomId)
+            .collection('MemberUser')
+            .doc(userId)
+            .collection("Turple")
+            .doc(element)
+            .set({'state': 'ready'}).then((value) async {
+          return await QuoteServices()
+              .getListQuoteFuture(element)
+              .then((value) async {
+            return await saveQuoteNew(userId, roomId, element, value, true)
+                .then((value) => true);
+          });
+        });
+      });
+      return true;
+    });
   }
 
   createUniqueID() async {

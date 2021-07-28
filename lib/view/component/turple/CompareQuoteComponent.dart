@@ -48,7 +48,7 @@ class _CompareQuoteComponent extends State<CompareQuoteComponent>
           padding: EdgeInsets.all(10),
           decoration: BoxDecoration(
               color:mainQuote.index==i&& mainQuote.index==quote.index ? Color(0xffFF25ABFF):mainQuote.index==i&& mainQuote.index!=quote.index ?Color(0xffFF00C9EE) :mainQuote.index!=i&& i==quote.index ?Color(
-                  0xffFFB3A3A1): Colors.white,
+                  0xffFFB7B8B7): Colors.white,
               borderRadius: BorderRadius.circular(10.0)),
           width: MediaQuery.of(context).size.width * 0.9,
           child: Row(
@@ -59,7 +59,7 @@ class _CompareQuoteComponent extends State<CompareQuoteComponent>
                   width: 40,
                   height: 40,
                   color:
-                      i == mainQuote.index ? Color(0xffFFFFE62E) :mainQuote.index!=i&& i==quote.index? Color(0xffFF91BCC4):Color(0xffFFFFBC00),
+                      i == mainQuote.index ? Color(0xffFFFFE62E) :mainQuote.index!=i&& i==quote.index? Color(0xffFFCDCDCD):Color(0xffFFFFBC00),
                   child: Center(
                     child: Text(
                       String.fromCharCode(65 + i),

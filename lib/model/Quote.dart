@@ -6,10 +6,10 @@ class Quote {
   List<String> answers = [];
   int index;
   Quote(
-      {@required this.id,
-      @required this.question,
-      @required this.answers,
-      @required this.index});
+      {this.id,
+     this.question,
+    this.answers,
+       this.index});
 
   addAnswer(String answer) {
     this.answers.add(answer);

@@ -93,4 +93,17 @@ class QuoteServices {
       return listQuote;
     });
   }
+  Future<List<Quote>> getListQuoteFuture(turpleId) {
+    return this
+        .turple
+        .doc(turpleId)
+        .collection("Quote").get()
+        .then((event) {
+      List<Quote> listQuote = [];
+      event.docs.forEach((doc) {
+        listQuote.add(mapFromDoc(doc));
+      });
+      return listQuote;
+    });
+  }
 }

@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:camtu_app/model/Room.dart';
-import 'package:camtu_app/model/Turple.dart';
 import 'package:camtu_app/view/services/RoomServices.dart';
 import 'package:crypto/crypto.dart';
 import 'package:camtu_app/model/UserAccount.dart';
@@ -9,8 +8,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:sqflite/sqflite.dart';
-import 'package:path/path.dart';
 
 class AccountServices {
   FirebaseAuth _auth = FirebaseAuth.instance;
