@@ -52,7 +52,6 @@ class _QuotePageState extends State<QuotePage>
     _tabController = new TabController(vsync: this, length: this.turple.number);
   }
 
-
   @override
   Widget build(BuildContext context) {
     RoomServices()
@@ -94,75 +93,78 @@ class _QuotePageState extends State<QuotePage>
                   begin: Alignment.topCenter,
                   end: Alignment.bottomRight,
                   colors: [Color(0xffFFA0C9FF), Color(0xffFFD3F9FF)])),
-          child:
+          child: this.user.typeUser
+              ? this.turple.isDeadLine()
+                  ? StreamBuilder<List<Quote>>(
+                      stream: QuoteServices().getListQuote(this.turple.id),
+                      builder: (ctx, mainQuote) {
+                        if (mainQuote.hasError ||
+                            mainQuote.connectionState ==
+                                ConnectionState.waiting) {
+                          return LoadingWidget();
+                        }
+                        return StreamBuilder<List<Quote>>(
+                            stream: RoomServices().getQuoteUser(
+                                this.turple.roomId,
+                                this.turple.id,
+                                this.user.phoneNo),
+                            builder: (ctx, quote) {
+                              if (quote.hasError ||
+                                  quote.connectionState ==
+                                      ConnectionState.waiting) {
+                                return LoadingWidget();
+                              }
+                              List<Widget> listCompare = [];
 
+                              for (var i = 0; i < mainQuote.data.length; i++) {
+                                for (var j = 0; j < quote.data.length; j++) {
+                                  if (mainQuote.data[i].id ==
+                                      quote.data[j].id) {
+                                    listCompare.add(CompareQuoteComponent(
+                                        quote.data[j], mainQuote.data[i]));
+                                    break;
+                                  }
+                                }
+                              }
+                              return TabBarView(
+                                children: listCompare,
+                                controller: _tabController,
+                              );
+                            });
+                      })
+                  : StreamBuilder<List<Stream<Quote>>>(
+                      stream: RoomServices().getQuote(this.turple.id,
+                          this.turple.roomId, this.user.phoneNo),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasError ||
+                            snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                          return LoadingWidget();
+                        }
 
-          this.user.typeUser
-              ?
-          this.turple.isDeadLine()?
-             StreamBuilder<List<Quote>>(
-                 stream: QuoteServices().getListQuote(this.turple.id),
-                 builder: (ctx,mainQuote){
-                   if (mainQuote.hasError ||
-                       mainQuote.connectionState == ConnectionState.waiting) {
-                     return LoadingWidget();
-                   }
-                   return StreamBuilder<List<Quote>>(
-                       stream: RoomServices().getQuoteUser(this.turple.roomId, this.turple.id, this.user.phoneNo),
-                       builder: (ctx,quote){
-                         if (quote.hasError ||
-                             quote.connectionState == ConnectionState.waiting) {
-                           return LoadingWidget();
-                         }
-                        List<Widget> listCompare=[];
-
-                         for (var i = 0; i < mainQuote.data.length; i++) {
-                           for (var j = 0; j < quote.data.length; j++) {
-                             if (mainQuote.data[i].id == quote.data[j].id ) {
-                               listCompare.add(CompareQuoteComponent(quote.data[j], mainQuote.data[i]));
-                               break;
-                             }
-                           }
-                         }
-                           return TabBarView(
-                           children: listCompare,
-                           controller: _tabController,
-                         );
-                       });
-                 })
-              :
-          StreamBuilder<List<Stream<Quote>>>(
-                  stream: RoomServices().getQuote(
-                      this.turple.id, this.turple.roomId, this.user.phoneNo),
-                  builder: (context, snapshot) {
-                    if (snapshot.hasError ||
-                        snapshot.connectionState == ConnectionState.waiting) {
-                      return LoadingWidget();
-                    }
-
-                    listImpl = [];
-                    List<Widget> stream = snapshot.data.map((e) {
-                      return StreamBuilder<Quote>(
-                          stream: e,
-                          builder: (ctx, snap) {
-                            if (snap.data == null ||
-                                snapshot.hasError ||
-                                snapshot.connectionState ==
-                                    ConnectionState.waiting) {
-                              return LoadingWidget();
-                            }
-                            ImplementQuote im =
-                                ImplementQuote(snap.data, this.type);
-                            im.createState();
-                            listImpl.add(im);
-                            return im;
-                          });
-                    }).toList();
-                    return TabBarView(
-                      children: stream,
-                      controller: _tabController,
-                    );
-                  })
+                        listImpl = [];
+                        List<Widget> stream = snapshot.data.map((e) {
+                          return StreamBuilder<Quote>(
+                              stream: e,
+                              builder: (ctx, snap) {
+                                if (snap.data == null ||
+                                    snapshot.hasError ||
+                                    snapshot.connectionState ==
+                                        ConnectionState.waiting) {
+                                  return LoadingWidget();
+                                }
+                                ImplementQuote im =
+                                    ImplementQuote(snap.data, this.type);
+                                im.createState();
+                                listImpl.add(im);
+                                return im;
+                              });
+                        }).toList();
+                        return TabBarView(
+                          children: stream,
+                          controller: _tabController,
+                        );
+                      })
               : StreamBuilder<List<Quote>>(
                   stream: QuoteServices().getListQuote(this.turple.id),
                   builder: (context, snapshot) {
@@ -183,202 +185,220 @@ class _QuotePageState extends State<QuotePage>
                     );
                   }),
         ),
-        floatingActionButton: !this.type &&this.user.typeUser
+        floatingActionButton: !this.type && this.user.typeUser
             ? null
             : Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children:    this.turple.state=='complete'&&!this.user.typeUser?[
-                 FloatingActionButton.extended(
-                  heroTag: 'AddQuote',
-                  label: Text('Lưu lại'),
-                  icon: Icon(Icons.save),
-                  onPressed: () async {
-                    ShowDialog().showDialogWidget(
-                        context,
-                        'Xác nhận lưu lại',
-                        "Lưu lại thông tin thay đổi?", () {
-                      if (this.user.typeUser) {
-                        RoomServices()
-                            .saveQuote(
-                            this.turple.roomId,
-                            this.turple.id,
-                            listImpl.map<Quote>((e) {
-                              return e.state.getQuote();
-                            }).toList(),
-                            false)
-                            .then((value) {
-                          if (value) {
-                            ShowDialog()
-                                .showToast('Lưu lại thành công', context);
-                          } else {
-                            ShowDialog().showToast(
-                                "Có lỗi xảy ra, vui lòng thử lại", context);
-                          }
-                        });
-                      } else {
-                        QuoteServices()
-                            .saveListQuote(
-                            this.turple.id,
-                            listCreate.map((e) {
-                              return e.state.getQuote();
-                            }).toList())
-                            .then((value) {
-                          if (value) {
-                            ShowDialog()
-                                .showToast('Lưu lại thành công', context);
-                          } else {
-                            ShowDialog().showToast(
-                                "Có lỗi xảy ra, vui lòng thử lại", context);
-                          }
-                        });
-                      }
-                    });
-                  },
-                ) ]:[FloatingActionButton.extended(
-                      heroTag: 'AddQuote',
-                      label:
-                          Text(this.user.typeUser ? 'Nộp bài' : 'Giao bài tập'),
-                      icon: Icon(Icons.book_outlined),
-                      onPressed: () {
-                        if (this.user.typeUser) {
-                          ShowDialog().showDialogWidget(context, 'confirm',
-                              'Bạn có muốn thực hiện nộp bài tập, sau khi nộp không thể chỉnh sửa?', () {
-                            if (validateIml()) {
-                            //   RoomServices()
-                            //       .saveQuote(
-                            //           this.turple.roomId,
-                            //           this.turple.id,
-                            //           listImpl.map<Quote>((e) {
-                            //             return e.state.getQuote();
-                            //           }).toList(),
-                            //           false)
-                            //       .then((value) {
-                            //     if (value) {
-                            //       print(this.turple.id);
-                            //       print(this.turple.roomId);
-                            //       RoomServices()
-                            //           .setStateTurpleUser(
-                            //               this.turple.roomId,
-                            //               this.user.phoneNo,
-                            //               this.turple.id,
-                            //               'complete')
-                            //           .then((value) {
-                            //         if (value) {
-                            //           Navigator.of(context).pop();
-                            //           ShowDialog().showToast(
-                            //               "Nộp bài thành công", context);
-                            //         } else {
-                            //           ShowDialog().showToast(
-                            //               "Có lỗi xảy ra vui lòng thử lại",
-                            //               context);
-                            //         }
-                            //       });
-                            //     } else {
-                            //       ShowDialog().showToast(
-                            //           "Có lỗi xảy ra, vui lòng thử lại",
-                            //           context);
-                            //     }
-                            //   });
-                            }
-                          });
-                        } else {
-                          ShowDialog().showDialogWidget(context, 'confirm',
-                              'Bạn có muốn thực hiện giao bài tập?', () {
-                            if (validate()) {
-                              QuoteServices()
-                                  .saveListQuote(
-                                      this.turple.id,
-                                      listCreate.map((e) {
-                                        return e.state.getQuote();
-                                      }).toList())
-                                  .then((value) {
-                                if (value) {
+                child: this.turple.state == 'complete' && !this.user.typeUser
+                    ? Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          FloatingActionButton.extended(
+                            heroTag: 'AddQuote',
+                            label: Text('Lưu lại'),
+                            icon: Icon(Icons.save),
+                            onPressed: () async {
+                              ShowDialog().showDialogWidget(
+                                  context,
+                                  'Xác nhận lưu lại',
+                                  "Lưu lại thông tin thay đổi?", () {
+                                if (this.user.typeUser) {
                                   RoomServices()
-                                      .setStateTurple(this.turple.id,
-                                          this.turple.roomId, "complete")
-                                      .then((value) {
-                                    if (value) {
-                                      RoomServices().saveQuote(
+                                      .saveQuote(
                                           this.turple.roomId,
                                           this.turple.id,
-                                          listCreate.map((e) {
+                                          listImpl.map<Quote>((e) {
                                             return e.state.getQuote();
                                           }).toList(),
-                                          true);
-                                      Navigator.of(context).pop();
+                                          false)
+                                      .then((value) {
+                                    if (value) {
                                       ShowDialog().showToast(
-                                          'Bài tập đã được giao', context);
+                                          'Lưu lại thành công', context);
                                     } else {
                                       ShowDialog().showToast(
-                                          'Có lỗi phát sinh vui lòng thử lại',
+                                          "Có lỗi xảy ra, vui lòng thử lại",
                                           context);
                                     }
                                   });
                                 } else {
-                                  ShowDialog().showToast(
-                                      'Có lỗi phát sinh vui lòng thử lại',
-                                      context);
+                                  QuoteServices()
+                                      .saveListQuote(
+                                          this.turple.id,
+                                          listCreate.map((e) {
+                                            return e.state.getQuote();
+                                          }).toList())
+                                      .then((value) {
+                                    if (value) {
+                                      ShowDialog().showToast(
+                                          'Lưu lại thành công', context);
+                                    } else {
+                                      ShowDialog().showToast(
+                                          "Có lỗi xảy ra, vui lòng thử lại",
+                                          context);
+                                    }
+                                  });
                                 }
                               });
-                            }
-                          });
-                        }
-                      },
-                    ),
-                    SizedBox(
-                      width: 10,
-                    ),
-                    FloatingActionButton.extended(
-                      heroTag: 'AddQuote',
-                      label: Text('Lưu lại'),
-                      icon: Icon(Icons.save),
-                      onPressed: () async {
-                        ShowDialog().showDialogWidget(
-                            context,
-                            'Xác nhận lưu lại',
-                            "Lưu lại thông tin thay đổi?", () {
-                          if (this.user.typeUser) {
-                            RoomServices()
-                                .saveQuote(
-                                    this.turple.roomId,
-                                    this.turple.id,
-                                    listImpl.map<Quote>((e) {
-                                      return e.state.getQuote();
-                                    }).toList(),
-                                    false)
-                                .then((value) {
-                              if (value) {
-                                ShowDialog()
-                                    .showToast('Lưu lại thành công', context);
+                            },
+                          )
+                        ],
+                      )
+                    : Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          FloatingActionButton.extended(
+                            heroTag: 'AddQuote',
+                            label: Text(this.user.typeUser
+                                ? 'Nộp bài'
+                                : 'Giao bài tập'),
+                            icon: Icon(Icons.book_outlined),
+                            onPressed: () {
+                              if (this.user.typeUser) {
+                                ShowDialog().showDialogWidget(
+                                    context,
+                                    'confirm',
+                                    'Bạn có muốn thực hiện nộp bài tập, sau khi nộp không thể chỉnh sửa?',
+                                    () {
+                                  if (validateIml()) {
+                                    //   RoomServices()
+                                    //       .saveQuote(
+                                    //           this.turple.roomId,
+                                    //           this.turple.id,
+                                    //           listImpl.map<Quote>((e) {
+                                    //             return e.state.getQuote();
+                                    //           }).toList(),
+                                    //           false)
+                                    //       .then((value) {
+                                    //     if (value) {
+                                    //       print(this.turple.id);
+                                    //       print(this.turple.roomId);
+                                    //       RoomServices()
+                                    //           .setStateTurpleUser(
+                                    //               this.turple.roomId,
+                                    //               this.user.phoneNo,
+                                    //               this.turple.id,
+                                    //               'complete')
+                                    //           .then((value) {
+                                    //         if (value) {
+                                    //           Navigator.of(context).pop();
+                                    //           ShowDialog().showToast(
+                                    //               "Nộp bài thành công", context);
+                                    //         } else {
+                                    //           ShowDialog().showToast(
+                                    //               "Có lỗi xảy ra vui lòng thử lại",
+                                    //               context);
+                                    //         }
+                                    //       });
+                                    //     } else {
+                                    //       ShowDialog().showToast(
+                                    //           "Có lỗi xảy ra, vui lòng thử lại",
+                                    //           context);
+                                    //     }
+                                    //   });
+                                  }
+                                });
                               } else {
-                                ShowDialog().showToast(
-                                    "Có lỗi xảy ra, vui lòng thử lại", context);
+                                ShowDialog().showDialogWidget(
+                                    context,
+                                    'confirm',
+                                    'Bạn có muốn thực hiện giao bài tập?', () {
+                                  if (validate()) {
+                                    QuoteServices()
+                                        .saveListQuote(
+                                            this.turple.id,
+                                            listCreate.map((e) {
+                                              return e.state.getQuote();
+                                            }).toList())
+                                        .then((value) {
+                                      if (value) {
+                                        RoomServices()
+                                            .setStateTurple(this.turple.id,
+                                                this.turple.roomId, "complete")
+                                            .then((value) {
+                                          if (value) {
+                                            RoomServices().saveQuote(
+                                                this.turple.roomId,
+                                                this.turple.id,
+                                                listCreate.map((e) {
+                                                  return e.state.getQuote();
+                                                }).toList(),
+                                                true);
+                                            Navigator.of(context).pop();
+                                            ShowDialog().showToast(
+                                                'Bài tập đã được giao',
+                                                context);
+                                          } else {
+                                            ShowDialog().showToast(
+                                                'Có lỗi phát sinh vui lòng thử lại',
+                                                context);
+                                          }
+                                        });
+                                      } else {
+                                        ShowDialog().showToast(
+                                            'Có lỗi phát sinh vui lòng thử lại',
+                                            context);
+                                      }
+                                    });
+                                  }
+                                });
                               }
-                            });
-                          } else {
-                            QuoteServices()
-                                .saveListQuote(
-                                    this.turple.id,
-                                    listCreate.map((e) {
-                                      return e.state.getQuote();
-                                    }).toList())
-                                .then((value) {
-                              if (value) {
-                                ShowDialog()
-                                    .showToast('Lưu lại thành công', context);
-                              } else {
-                                ShowDialog().showToast(
-                                    "Có lỗi xảy ra, vui lòng thử lại", context);
-                              }
-                            });
-                          }
-                        });
-                      },
-                    ),
-                  ],
-                ),
+                            },
+                          ),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          FloatingActionButton.extended(
+                            heroTag: 'AddQuote',
+                            label: Text('Lưu lại'),
+                            icon: Icon(Icons.save),
+                            onPressed: () async {
+                              ShowDialog().showDialogWidget(
+                                  context,
+                                  'Xác nhận lưu lại',
+                                  "Lưu lại thông tin thay đổi?", () {
+                                if (this.user.typeUser) {
+                                  RoomServices()
+                                      .saveQuote(
+                                          this.turple.roomId,
+                                          this.turple.id,
+                                          listImpl.map<Quote>((e) {
+                                            return e.state.getQuote();
+                                          }).toList(),
+                                          false)
+                                      .then((value) {
+                                    if (value) {
+                                      ShowDialog().showToast(
+                                          'Lưu lại thành công', context);
+                                    } else {
+                                      ShowDialog().showToast(
+                                          "Có lỗi xảy ra, vui lòng thử lại",
+                                          context);
+                                    }
+                                  });
+                                } else {
+                                  QuoteServices()
+                                      .saveListQuote(
+                                          this.turple.id,
+                                          listCreate.map((e) {
+                                            return e.state.getQuote();
+                                          }).toList())
+                                      .then((value) {
+                                    if (value) {
+                                      ShowDialog().showToast(
+                                          'Lưu lại thành công', context);
+                                    } else {
+                                      ShowDialog().showToast(
+                                          "Có lỗi xảy ra, vui lòng thử lại",
+                                          context);
+                                    }
+                                  });
+                                }
+                              });
+                            },
+                          ),
+                        ],
+                      ),
               ),
       ),
     );
@@ -423,27 +443,28 @@ class _QuotePageState extends State<QuotePage>
   }
 
   validateIml() {
-    print(listImpl.length);
-
-    print('---------');
-    print(listImpl2.length);
-    print(listImpl2);
-    for (var i = 0; i < listImpl2.length; i++) {
-      print(listImpl2[i]);
-      if (i <= (listImpl.length - 1)&&listImpl[i].state.getQuote().id==listImpl2[i].id) {      print(listImpl[i].state.getQuote());
-        if (!validateQuoteAnswer(listImpl[i].state.getQuote())) {
-          initTab(i);
-          ShowDialog().showToast("Bạn chưa chọn đáp án cho câu này", context);
-          return false;
+    List<int> rememberIndex=[];
+      for (var i = 0; i < listImpl2.length; i++) {
+        var check = false;
+        for (var j = 0; j < listImpl.length; j++) {
+          if (listImpl[j].state.getQuote().id == listImpl2[i].id) {
+            check = true;
+            if (!validateQuoteAnswer(listImpl[j].state.getQuote())) {
+              initTab(i);
+              ShowDialog()
+                  .showToast("Bạn chưa chọn đáp án cho câu này", context);
+              return false;
+            } else {
+              break;
+            }
+          }
         }
-      } else {
-        if (!validateQuoteAnswer(listImpl2[i])) {
+        if (!check && !validateQuoteAnswer(listImpl2[i])) {
           initTab(i);
           ShowDialog().showToast("Bạn chưa chọn đáp án cho câu này", context);
           return false;
         }
       }
-    }
     return true;
   }
 }
