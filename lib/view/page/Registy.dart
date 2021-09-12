@@ -66,7 +66,7 @@ class _OtpPageState extends State<OtpPage> {
   void dispose() {
     if(timer.isActive){
       timer.cancel();
-    }
+    }super.dispose();
   }
 
   @override
@@ -180,7 +180,7 @@ class _OtpPageState extends State<OtpPage> {
 
                                       await FirebaseAuth.instance
                                           .verifyPhoneNumber(
-                                              phoneNumber: '+1 1234567882',
+                                              phoneNumber: phoneNo,
                                               verificationCompleted: (id) {
                                                 if(timer.isActive){
                                                   timer.cancel();
@@ -239,15 +239,15 @@ class _OtpPageState extends State<OtpPage> {
                                   ),
                                   onPressed: () async {
                                     AccountServices ac = new AccountServices();
-
+                                    setState(() {
+                                      loading=true;
+                                    });
                                     await ac
                                         .checkOtp(
                                             this.optController.text, this.id)
                                         .then((value) async {
                                       if (value) {
-                                        setState(() {
-                                          loading=true;
-                                        });
+
                                         if(timer.isActive){
                                           timer.cancel();
                                         }
@@ -265,6 +265,9 @@ class _OtpPageState extends State<OtpPage> {
                                           ));
                                         });
                                       } else {
+                                        setState(() {
+                                          loading=false;
+                                        });
                                         ScaffoldMessenger.of(this.context)
                                             .showSnackBar(SnackBar(
                                           content: Text("Sai mã OTP"),

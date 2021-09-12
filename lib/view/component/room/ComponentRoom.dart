@@ -60,7 +60,7 @@ class _ComponentRoomState extends State<ComponentRoom> {
                                   height: 1,
                                 )
                                 , ListTile(
-                                  title: Text('Id Room'),
+                                  title: Text('Mã Room'),
                                   subtitle: Text(room.idRoom,style: TextStyle(fontSize: 16),),
                                 ),Divider(
                                   height: 1,

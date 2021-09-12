@@ -22,7 +22,6 @@ class InputPass extends StatefulWidget {
     this.input.value=value;
   }
 }
-
 class _InputPassState extends State<InputPass> {
   bool obsecured=true;
   String value;

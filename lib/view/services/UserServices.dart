@@ -67,6 +67,15 @@ class AccountServices {
             ));
   }
 
+  Future<bool> resetPassword(String phoneNo, String password) async {
+    Map<String, dynamic> data = {
+      'password': md5.convert(utf8.encode(password.trim())).toString(),
+    };
+    return await this.doc.doc(phoneNo).update(data).then((value) {
+      return true;
+    }).catchError((onError) => false);
+  }
+
   Future registryUser(UserAccount user) async {
     Map<String, dynamic> data = {
       'name': user.name.trim(),
@@ -96,6 +105,7 @@ class AccountServices {
       if (authCredential.user != null) {
         return true;
       }
+      return false;
     } on FirebaseAuthException catch (e) {
       print(e);
       return false;

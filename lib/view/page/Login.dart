@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:camtu_app/model/UserAccount.dart';
+import 'package:camtu_app/view/page/ForgotPassword.dart';
 import 'package:camtu_app/view/page/RegistyType.dart';
 import 'package:camtu_app/view/page/RouterPage.dart';
 import 'package:camtu_app/view/services/UserServices.dart';
@@ -172,7 +173,12 @@ class _LoginState extends State<Login> {
                     ),
                     Row(mainAxisAlignment: MainAxisAlignment.end, children: [
                       TextButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                builder: (context) => VerifyPhonePage()));
+                          },
                           child: Text(
                             'Quên mật khẩu',
                             style: TextStyle(
