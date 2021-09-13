@@ -1,11 +1,13 @@
 import 'dart:math';
 
 import 'package:camtu_app/model/DetailWork.dart';
+import 'package:camtu_app/model/Notitfy.dart';
 import 'package:camtu_app/model/Quote.dart';
 import 'package:camtu_app/model/Room.dart';
 import 'package:camtu_app/model/ScoreDetail.dart';
 import 'package:camtu_app/model/Turple.dart';
 import 'package:camtu_app/model/UserAccount.dart';
+import 'package:camtu_app/view/services/NotifycationServices.dart';
 import 'package:camtu_app/view/services/QuoteServices.dart';
 import 'package:camtu_app/view/services/TurpleServices.dart';
 import 'package:camtu_app/view/services/UserServices.dart';
@@ -131,7 +133,8 @@ class RoomServices {
         .catchError((onError) => false);
   }
 
-  Future<bool> saveQuote(roomId, turpleId, List<Quote> quote, type) async {
+  Future<bool> saveQuote(
+      roomId, Turple turpleId, List<Quote> quote, type) async {
     return await this
         .room
         .doc(roomId)
@@ -145,17 +148,33 @@ class RoomServices {
             if (type) {
               await element.reference
                   .collection("Turple")
-                  .doc(turpleId)
+                  .doc(turpleId.id)
                   .set({'state': 'ready'});
             }
             bool war = await element.reference
                 .collection("Turple")
-                .doc(turpleId)
+                .doc(turpleId.id)
                 .collection("Quote")
                 .doc(value.id)
                 .set(map)
-                .then((value) => true)
-                .catchError((onError) => false);
+                .then((value) {
+              DateTime date = DateTime.now();
+              Notify not = Notify(
+                  phoneNo: AccountServices.id,
+                  date: date.toString(),
+                  type: 'give',
+                  content: [
+                    roomId,
+                    turpleId.name,
+                    turpleId.id,
+                    turpleId.deadLine
+                  ],
+                  state: 'unread');
+              NotifycationServices().addNotifycation(not).listen((event) {
+                print(event);
+              });
+              return true;
+            }).catchError((onError) => false);
             if (war == false) {
               return false;
             }

@@ -1,8 +1,11 @@
 class Notify{
-  var id;
-  var date;
-  var content;
-  var type;
-  var phoneNo;
-  Notify({this.id,this.date,this.content,this.type,this.phoneNo});
+  String id;
+  String date;
+  var content=[];
+  String type;
+  String phoneNo;
+  String state;
+
+  Notify({this.id, this.date, this.content, this.type, this.phoneNo, this.state});
+
 }

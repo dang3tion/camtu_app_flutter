@@ -1,13 +1,16 @@
+import 'package:camtu_app/model/Notitfy.dart';
+import 'package:camtu_app/model/Room.dart';
 import 'package:camtu_app/model/UserAccount.dart';
 import 'package:camtu_app/view/component/static/Dialog.dart';
 import 'package:camtu_app/view/component/static/Loading.dart';
 import 'package:camtu_app/view/component/static/PersonalDetail.dart';
+import 'package:camtu_app/view/services/NotifycationServices.dart';
 import 'package:camtu_app/view/services/RoomServices.dart';
 import 'package:camtu_app/view/services/UserServices.dart';
 import 'package:flutter/material.dart';
 
 class RequestRoomComponent extends StatefulWidget {
-  final String idRoom;
+  final Room idRoom;
 
   RequestRoomComponent(this.idRoom);
 
@@ -17,7 +20,7 @@ class RequestRoomComponent extends StatefulWidget {
 }
 
 class _RequestRoomComponentState extends State<RequestRoomComponent> {
-  String idRoom;
+  Room idRoom;
   bool loading = false;
 
   _RequestRoomComponentState(this.idRoom);
@@ -53,13 +56,16 @@ class _RequestRoomComponentState extends State<RequestRoomComponent> {
                       this.loading = true;
                     });
                     await RoomServices()
-                        .acceptUser(user.phoneNo, idRoom, true, 'member')
+                        .acceptUser(user.phoneNo, idRoom.idRoom, true, 'member')
                         .then((value)async {
-                       await   RoomServices().saveQuoteUser(this.idRoom, user.phoneNo);
+                       await   RoomServices().saveQuoteUser(this.idRoom.idRoom, user.phoneNo);
                       setState(() {
                         this.loading = false;
                       });
                     });
+                    DateTime date=DateTime.now();
+                    Notify not=Notify(phoneNo:user.phoneNo,date:date.toString(),type: 'accept',content: [this.idRoom.nameRoom],state: 'unread' );
+                    NotifycationServices().addNotifycation(not);
                   },
                   color: Color(0xffFFEBFFFA),
                   child: Text(
@@ -73,9 +79,13 @@ class _RequestRoomComponentState extends State<RequestRoomComponent> {
 
                     ShowDialog().showDialogWidget(context, 'Xác nhận từ chối',
                         'Từ chối người dùng tham gia', () async {
+
+
+
                       await RoomServices()
-                          .acceptUser(user.phoneNo, idRoom, false, 'member')
+                          .acceptUser(user.phoneNo, idRoom.idRoom, false, 'member')
                           .then((value) {
+
 
                       });
                     });
@@ -128,7 +138,7 @@ class _RequestRoomComponentState extends State<RequestRoomComponent> {
             loading
                 ? LoadingWidget()
                 : StreamBuilder<List<Stream<UserAccount>>>(
-                    stream: RoomServices().getRequestUser(this.idRoom, false),
+                    stream: RoomServices().getRequestUser(this.idRoom.idRoom, false),
                     builder: (context, snapshot) {
                       if (snapshot.hasError) {
                         return Container();

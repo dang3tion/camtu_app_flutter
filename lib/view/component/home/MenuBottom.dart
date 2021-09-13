@@ -11,6 +11,8 @@ class MenuButton extends StatefulWidget {
 
 class _MenuButtonState extends State<MenuButton> {
   int _currentIndex = 0;
+  int fontSize=19;
+  int iconSize=44;
 _MenuButtonState();
   @override
   Widget build(BuildContext context) {
@@ -34,31 +36,31 @@ _MenuButtonState();
         type: BottomNavigationBarType.fixed,
         items: [
           BottomNavigationBarItem(
-              icon: Icon(Icons.house, size: 40),
+              icon: Icon(Icons.house, size: 44),
               title: Text(
                 "Room",
-                style: TextStyle(fontSize: 16),
+                style: TextStyle(fontSize: 19),
               )),
           BottomNavigationBarItem(
               icon: Icon(
                 Icons.chat,
-                size: 40,
+                size: 44,
               ),
               title: Text(
                 "Chat",
-                style: TextStyle(fontSize: 16),
+                style: TextStyle(fontSize: 19),
               )),
           BottomNavigationBarItem(
-              icon: Icon(Icons.notifications_active_outlined, size: 40),
+              icon: Icon(Icons.notifications_active_outlined, size: 44),
               title: Text(
                 "Thông báo",
-                style: TextStyle(fontSize: 16),
+                style: TextStyle(fontSize: 19),
               )),
           BottomNavigationBarItem(
-              icon: Icon(Icons.person_pin, size: 40),
+              icon: Icon(Icons.person_pin, size: 44),
               title: Text(
                 "Tài khoản",
-                style: TextStyle(fontSize: 16),
+                style: TextStyle(fontSize: 19),
               )),
         ],
         onTap: (index) {

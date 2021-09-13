@@ -57,7 +57,7 @@ class _SystemRoomPageState extends State<SystemRoomPage> {
               Container(child: TupleQuote(this.room,AccountServices.useracount),
               ),
               Container(
-                child: RequestRoomComponent(this.room.idRoom),
+                child: RequestRoomComponent(this.room),
               ),
               Container(
                 child: UserMember(this.room.idRoom),

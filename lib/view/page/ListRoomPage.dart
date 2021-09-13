@@ -56,6 +56,8 @@ class _ListRoomPageState extends State<ListRoomPage> {
                                       ConnectionState.waiting) {
                                 return Container();
                               }
+
+
                               return ComponentRoom(snapshot.data);}
                         ))
                           .toList(),

@@ -206,7 +206,7 @@ class _QuotePageState extends State<QuotePage>
                                   RoomServices()
                                       .saveQuote(
                                           this.turple.roomId,
-                                          this.turple.id,
+                                          this.turple,
                                           listImpl.map<Quote>((e) {
                                             return e.state.getQuote();
                                           }).toList(),
@@ -319,7 +319,7 @@ class _QuotePageState extends State<QuotePage>
                                           if (value) {
                                             RoomServices().saveQuote(
                                                 this.turple.roomId,
-                                                this.turple.id,
+                                                this.turple,
                                                 listCreate.map((e) {
                                                   return e.state.getQuote();
                                                 }).toList(),
@@ -361,7 +361,7 @@ class _QuotePageState extends State<QuotePage>
                                   RoomServices()
                                       .saveQuote(
                                           this.turple.roomId,
-                                          this.turple.id,
+                                          this.turple,
                                           listImpl.map<Quote>((e) {
                                             return e.state.getQuote();
                                           }).toList(),
