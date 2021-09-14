@@ -132,7 +132,17 @@ class RoomServices {
         .then((value) => true)
         .catchError((onError) => false);
   }
-
+Stream<List<Stream<Turple>>> getListTurpleOfUser(String rooomId,String phoneNo){
+    return room.doc(rooomId).collection('MemberUser').doc(phoneNo).collection("Turple").snapshots().map((event){
+      List<Stream<Turple>> list=[];
+      event.docs.forEach((element) {
+        list.add(TurpleServices().getTurple(element.id, 'state'));
+      });
+      return list;
+    });
+    
+    
+}
   Future<bool> saveQuote(
       roomId, Turple turpleId, List<Quote> quote, type) async {
     return await this

@@ -93,6 +93,7 @@ class QuoteServices {
       return listQuote;
     });
   }
+
   Future<List<Quote>> getListQuoteFuture(turpleId) {
     return this
         .turple

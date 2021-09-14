@@ -74,6 +74,7 @@ class _LoginState extends State<Login> {
         AccountServices().user.listen((value) {
           if (value != null) {
             AccountServices.useracount = value;
+            AccountServices.id=value.phoneNo;
             Navigator.popAndPushNamed(context, '/home');
           }
         });

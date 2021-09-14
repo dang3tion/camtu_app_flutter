@@ -11,6 +11,7 @@ class NotifycationServices {
       'type': not.type,
       'state': not.state,
     };
+    print(map);
     return doc
         .doc(not.phoneNo)
         .collection("Notify")
@@ -20,7 +21,7 @@ class NotifycationServices {
         .asStream();
   }
 
-  Notify mapDocument(QueryDocumentSnapshot query) {
+  Notify mapDocument(DocumentSnapshot query) {
     return Notify(
         id: query.id,
         state: query.get('state'),
@@ -29,26 +30,27 @@ class NotifycationServices {
         date: query.get('datetime'));
   }
 
-  Stream<List<Notify>> getNotify(String phoneNo) {
-   return doc
+  Stream<List<Stream<Notify>>> getNotify(String phoneNo) {
+    return doc
         .doc(phoneNo)
         .collection('Notify')
         .orderBy('datetime', descending: true)
         .snapshots()
         .map((event) {
-      List<Notify> list = [];
+      List<Stream<Notify>> list = [];
       event.docs.forEach((element) {
-        Notify no = mapDocument(element);
-        no.phoneNo = phoneNo;
-        list.add(no);
+        list.add(element.reference.snapshots().map((doc) {
+          Notify no = mapDocument(doc);
+          no.phoneNo = phoneNo;
+          return no;
+        }));
       });
       return list;
     });
-    return null;
   }
 
   Stream<int> countUnred(String phoneNo) {
-   return doc
+    return doc
         .doc(phoneNo)
         .collection('Notify')
         .where('state', isEqualTo: 'unread')
@@ -57,18 +59,53 @@ class NotifycationServices {
       return event.size;
     });
   }
-  Stream<String> getStateOfRoom(String roomId,String phoneNo){
-    return doc.doc(phoneNo).collection('Notify').orderBy('datetime',descending: true).snapshots().map((event){
-      if(event.docs.isEmpty) return 'null';
-        var count=0;
-      for(var i=0;i<event.size;i++) {
-        if (event.docs[i].get('type') == 'requestMember'&&event.docs[i].get('content')[0]==roomId) {
+  Future<bool> readingNotify(String phoneNo) {
+    return doc
+        .doc(phoneNo)
+        .collection('Notify')
+        .where('state', isEqualTo: 'unread').get().then((value){
+       value.docs.forEach((element) {
+         element.reference.update({'state':'read'});
+       });
+       return true;
+    });
+
+
+  }
+  Future<String> getStateOfRoom(String roomId, String phoneNo) async {
+    return await doc
+        .doc(phoneNo)
+        .collection('Notify')
+        .orderBy('datetime', descending: true)
+        .get()
+        .then((event) {
+      var count = 0;
+      for (var i = 0; i < event.size; i++) {
+        if (event.docs[i].get('type') == 'request' &&
+            event.docs[i].get('content')[0] == roomId) {
           return event.docs[i].get('state');
         }
         if (count == 10) break;
         count++;
       }
       return 'read';
+    });
+  }
+
+  Future<String> getStateTurple(String turpleId, String phoneNo) async {
+    return await doc
+        .doc(phoneNo)
+        .collection('Notify')
+        .where('type', isEqualTo: 'deadline')
+        .get()
+        .then((event) {
+      if (event.docs.isEmpty) return 'null';
+      for (var i = 0; i < event.size; i++) {
+        if (event.docs[i].get('content')[0].toString() == turpleId.toString()) {
+          return 'true';
+        }
+      }
+      return 'false';
     });
   }
 }

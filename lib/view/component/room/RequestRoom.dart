@@ -64,7 +64,7 @@ class _RequestRoomComponentState extends State<RequestRoomComponent> {
                       });
                     });
                     DateTime date=DateTime.now();
-                    Notify not=Notify(phoneNo:user.phoneNo,date:date.toString(),type: 'accept',content: [this.idRoom.nameRoom],state: 'unread' );
+                    Notify not=Notify(phoneNo:user.phoneNo,date:date.toString(),type: 'accept',content: [this.idRoom.nameRoom,this.idRoom.idRoom],state: 'unread' );
                     NotifycationServices().addNotifycation(not);
                   },
                   color: Color(0xffFFEBFFFA),

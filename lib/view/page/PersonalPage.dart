@@ -262,7 +262,7 @@ class _PersonalPageState extends State<PersonalPage> {
                               ),
                               ListTile(
                                   leading: Icon(Icons.phone, size: 30),
-                                  title: Text('Số điện thoại: ' + snapshot.data.phoneNo,
+                                  title: Text('Số điện thoại: ' + speratePhone(snapshot.data.phoneNo),
                                       style: TextStyle(fontSize: 18)))
                             ]),
                       ),
@@ -318,7 +318,20 @@ class _PersonalPageState extends State<PersonalPage> {
       ),
     );
   }
-
+  speratePhone(String text) {
+    var count = 0;
+    var result = '';
+    for (var i = 0; i < text.length; i++) {
+      if (count == 3) {
+        count = 1;
+        result += ' ' + text[i];
+      } else {
+        result += text[i];
+        count++;
+      }
+    }
+    return result;
+  }
   @override
   Widget build(BuildContext context) {
     switch (index) {

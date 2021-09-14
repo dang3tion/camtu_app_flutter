@@ -165,8 +165,8 @@ class _QuotePageState extends State<QuotePage>
                           controller: _tabController,
                         );
                       })
-              : StreamBuilder<List<Quote>>(
-                  stream: QuoteServices().getListQuote(this.turple.id),
+              : FutureBuilder<List<Quote>>(
+                  future: QuoteServices().getListQuoteFuture(this.turple.id),
                   builder: (context, snapshot) {
                     if (snapshot.hasError ||
                         snapshot.connectionState == ConnectionState.waiting) {
@@ -261,41 +261,41 @@ class _QuotePageState extends State<QuotePage>
                                     'Bạn có muốn thực hiện nộp bài tập, sau khi nộp không thể chỉnh sửa?',
                                     () {
                                   if (validateIml()) {
-                                    //   RoomServices()
-                                    //       .saveQuote(
-                                    //           this.turple.roomId,
-                                    //           this.turple.id,
-                                    //           listImpl.map<Quote>((e) {
-                                    //             return e.state.getQuote();
-                                    //           }).toList(),
-                                    //           false)
-                                    //       .then((value) {
-                                    //     if (value) {
-                                    //       print(this.turple.id);
-                                    //       print(this.turple.roomId);
-                                    //       RoomServices()
-                                    //           .setStateTurpleUser(
-                                    //               this.turple.roomId,
-                                    //               this.user.phoneNo,
-                                    //               this.turple.id,
-                                    //               'complete')
-                                    //           .then((value) {
-                                    //         if (value) {
-                                    //           Navigator.of(context).pop();
-                                    //           ShowDialog().showToast(
-                                    //               "Nộp bài thành công", context);
-                                    //         } else {
-                                    //           ShowDialog().showToast(
-                                    //               "Có lỗi xảy ra vui lòng thử lại",
-                                    //               context);
-                                    //         }
-                                    //       });
-                                    //     } else {
-                                    //       ShowDialog().showToast(
-                                    //           "Có lỗi xảy ra, vui lòng thử lại",
-                                    //           context);
-                                    //     }
-                                    //   });
+                                      RoomServices()
+                                          .saveQuote(
+                                              this.turple.roomId,
+                                              this.turple,
+                                              listImpl.map<Quote>((e) {
+                                                return e.state.getQuote();
+                                              }).toList(),
+                                              false)
+                                          .then((value) {
+                                        if (value) {
+                                          print(this.turple.id);
+                                          print(this.turple.roomId);
+                                          RoomServices()
+                                              .setStateTurpleUser(
+                                                  this.turple.roomId,
+                                                  this.user.phoneNo,
+                                                  this.turple.id,
+                                                  'complete')
+                                              .then((value) {
+                                            if (value) {
+                                              Navigator.of(context).pop();
+                                              ShowDialog().showToast(
+                                                  "Nộp bài thành công", context);
+                                            } else {
+                                              ShowDialog().showToast(
+                                                  "Có lỗi xảy ra vui lòng thử lại",
+                                                  context);
+                                            }
+                                          });
+                                        } else {
+                                          ShowDialog().showToast(
+                                              "Có lỗi xảy ra, vui lòng thử lại",
+                                              context);
+                                        }
+                                      });
                                   }
                                 });
                               } else {

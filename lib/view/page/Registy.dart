@@ -453,7 +453,6 @@ class _RegistryPageState extends State<RegistryPage> {
       ),
     );
   }
-
   void showConfirm() {
     showDialog(
         context: context,
@@ -492,7 +491,7 @@ class _RegistryPageState extends State<RegistryPage> {
                             }
                             this.user = new UserAccount(
                                 avatar:
-                                    'https://thumbs.dreamstime.com/z/flower-circle-round-wreath-coronet-blue-hydrangea-hortensia-flowers-green-eucalyptus-leaves-beautiful-lovely-summer-bouquet-94687127.jpg',
+                                    'https://cdn.pixabay.com/photo/2018/04/18/18/56/user-3331257_960_720.png',
                                 userId: idStudent.getText(),
                                 name: name.getText(),
                                 address: address.getText(),

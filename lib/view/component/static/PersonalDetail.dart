@@ -92,7 +92,7 @@ class PersonalDetail extends StatelessWidget {
                     ),
                     ListTile(
                         leading: Icon(Icons.phone, size: 30),
-                        title: Text('Số điện thoại: ' + user.phoneNo,
+                        title: Text('Số điện thoại: ' + speratePhone(user.phoneNo),
                             style: TextStyle(fontSize: 18)))
                   ]),
             ),
@@ -100,5 +100,18 @@ class PersonalDetail extends StatelessWidget {
         )),
       ),
     );
+  } speratePhone(String text) {
+    var count = 0;
+    var result = '';
+    for (var i = 0; i < text.length; i++) {
+      if (count == 3) {
+        count = 1;
+        result += ' ' + text[i];
+      } else {
+        result += text[i];
+        count++;
+      }
+    }
+    return result;
   }
 }

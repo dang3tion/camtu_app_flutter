@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:camtu_app/model/Room.dart';
+import 'package:camtu_app/view/page/RouterPage.dart';
 import 'package:camtu_app/view/services/RoomServices.dart';
 import 'package:crypto/crypto.dart';
 import 'package:camtu_app/model/UserAccount.dart';
@@ -40,11 +41,20 @@ class AccountServices {
                     FlatButton(
                       color: Color(0xffFF00E5E5),
                       onPressed: () async {
+
                         id = null;
                         final store = FlutterSecureStorage();
                         await store.delete(key: 'user');
-                        Navigator.of(context).pop();
-                        Navigator.popAndPushNamed(context, "/");
+                        AccountServices.useracount=null;
+                        AccountServices.id=null;
+                        Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(
+                            builder: (BuildContext context) => new RouterPage(),
+                          ),
+                              (route) => false,
+                        );
+                        // Navigator.of(context).popUntil((route) => route.isFirst);
                       },
                       child: Text(
                         'Xác nhận',

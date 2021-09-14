@@ -6,7 +6,6 @@ import 'package:camtu_app/view/component/home/MenuBottom.dart';
 import 'package:camtu_app/view/component/home/TabNavigator.dart';
 import 'package:camtu_app/view/component/turple/TupleQuotes.dart';
 import 'package:camtu_app/view/page/ListRoomPage.dart';
-import 'package:camtu_app/view/page/NotifycationPage.dart';
 import 'package:camtu_app/view/page/PersonalPage.dart';
 import 'package:camtu_app/view/component/room/SystemRoomPage.dart';
 import 'package:camtu_app/view/services/NotifycationServices.dart';
@@ -17,30 +16,37 @@ import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
   final UserAccount user;
-
-  const HomePage(this.user);
+  const HomePage(this.user) ;
 
   @override
   _HomePageState createState() => _HomePageState(this.user);
 }
 
-class _HomePageState extends State<HomePage> {
-  UserAccount user;
 
+
+class _HomePageState extends State<HomePage> {
+  UserAccount user ;
+  var count=false;
   _HomePageState(this.user) {
+
+
+
     List<Widget> pages = [
       new ListRoomPage(),
       new Scaffold(
           appBar: AppBar(
-        title: Text('Chat'),
-      )),
-      NotifycationPage(),
+            title: Text('Chat'),
+          )),
+      new Scaffold(
+        appBar: AppBar(
+          title: Text('Thông báo'),
+        ),
+        backgroundColor: Colors.yellowAccent,
+      ),
       new PersonalPage(user),
     ];
-  }
 
-  double fontSize = 16;
-  double size = 36;
+  }
   String _currentPage = "Page1";
   List<String> pageKeys = ["Page1", "Page2", "Page3", "Page4", "Page5"];
   Map<String, GlobalKey<NavigatorState>> _navigatorKeys = {
@@ -55,37 +61,28 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void initState() {
-    super.initState();
-    _pageController = new PageController();
-    if (this.user == null) {
-      Navigator.of(context).pop();
-      Navigator.popAndPushNamed(context, "/");
-    }
-  }
 
-  @override
-  Widget build(BuildContext context) {
-    // try {
-    if (AccountServices.useracount.typeUser == false) {
-      AccountServices().getListRoom(AccountServices.id).listen((event) {
+    if  (AccountServices.useracount.typeUser == false) {
+      print(AccountServices.useracount.typeUser);
+      AccountServices().getListRoom(AccountServices.id).listen((event)async {
         event.forEach((element) {
-          element.listen((room) {
-            NotifycationServices()
+          element.listen((room) async{
+            print(room.nameRoom);
+            await  NotifycationServices()
                 .getStateOfRoom(room.idRoom, AccountServices.id)
-                .listen((event) {
-                  print(event);
+                .then((event) {
               if (event != 'unread') {
                 RoomServices().getRequestUser(room.idRoom, false).listen((e) {
-                  if (e.length > 0) {
+                  if (e.length > 0&&AccountServices.useracount.typeUser==false) {
                     DateTime date = DateTime.now();
                     Notify not = Notify(
                         phoneNo: AccountServices.id,
                         date: date.toString(),
-                        type: 'requestMember',
+                        type: 'request',
                         content: [room.idRoom, room.nameRoom, e.length],
                         state: 'unread');
                     NotifycationServices().addNotifycation(not).listen((event) {
-                      print(event);
+
                     });
                   }
                 });
@@ -94,13 +91,102 @@ class _HomePageState extends State<HomePage> {
           });
         });
       });
+      AccountServices().getListRoom(AccountServices.id).listen((event) async{
+        event.forEach((element) {
+          element.first.then((room) {
+            RoomServices().getListTurple(room.idRoom).listen((lstTur) {
+              lstTur.forEach((ee) {
+                ee.listen((turple)async {
+                  if (turple.isDeadLine()) {
+                    await  NotifycationServices()
+                        .getStateTurple(turple.id, AccountServices.id)
+                        .then((event) {
+                      if (event != 'true') {
+                        Notify not = Notify(
+                            phoneNo: AccountServices.id,
+                            date: turple.deadLine,
+                            type: 'deadline',
+                            content: [
+                              turple.id,
+                              turple.name,
+                              turple.deadLine,
+                              room.nameRoom
+                            ],
+                            state: 'unread');
+                        NotifycationServices()
+                            .addNotifycation(not)
+                            .listen((event) {
+
+                        });
+                      }
+                    });
+                  }
+                  ;
+                });
+              });
+            });
+          });
+        });
+      });
+    }else if(AccountServices.useracount.typeUser==true){
+      AccountServices().getListRoom(AccountServices.id).listen((event) {
+        event.forEach((element) {
+          element.listen((room) {
+            RoomServices().getListTurpleOfUser(room.idRoom,AccountServices.id).listen((lstTur) {
+              lstTur.forEach((ee) {
+                ee.listen((turple) async{
+                  if (turple.isDeadLine()) {
+                    await    NotifycationServices()
+                        .getStateTurple(turple.id, AccountServices.id)
+                        .then((event) {
+                      if (event != 'true') {
+                        Notify nte = Notify(
+                            phoneNo: AccountServices.id,
+                            date: turple.deadLine,
+                            type: 'deadline',
+                            content: [
+                              turple.id,
+                              turple.name,
+                              turple.deadLine,
+                              room.nameRoom
+                            ],
+                            state: 'unread');
+                        NotifycationServices()
+                            .addNotifycation(nte)
+                            .listen((event) {
+
+                        });
+                      }
+                    });
+                  }
+                  ;
+                });
+              });
+            });
+          });
+        });
+      });
+
+
+
+
     }
-    // } catch (e) {}
+    super.initState();
+    _pageController = new PageController();
+    if(this.user==null){
+      Navigator.of(context).pop();
+      Navigator.popAndPushNamed(context, "/");
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return WillPopScope(
-      onWillPop: () async {
-        return await AccountServices().logout(context);
+      onWillPop: ()async{
+        return await   AccountServices().logout(context);
       },
       child: Scaffold(
+
           body: Stack(children: <Widget>[
             _buildOffstageNavigator("Page1"),
             _buildOffstageNavigator("Page2"),
@@ -109,7 +195,7 @@ class _HomePageState extends State<HomePage> {
             _buildOffstageNavigator("Page5"),
           ]),
           bottomNavigationBar: Container(
-            height: MediaQuery.of(context).size.height * 0.09,
+             height: 90,
             decoration: BoxDecoration(boxShadow: [
               BoxShadow(
                 color: Colors.grey[400],
@@ -119,42 +205,52 @@ class _HomePageState extends State<HomePage> {
             child: BottomNavigationBar(
               showSelectedLabels: true,
               showUnselectedLabels: true,
+
               selectedItemColor: Colors.lightBlue,
               unselectedItemColor: Colors.grey[600],
               elevation: 50,
               currentIndex: _selectedIndex,
               backgroundColor: const Color(0xFFFFFFFF),
               type: BottomNavigationBarType.fixed,
-              items: [
-                BottomNavigationBarItem(
-                    icon: Icon(Icons.house, size: this.size),
-                    title: Text(
-                      "Room",
-                      style: TextStyle(fontSize: this.fontSize),
-                    )),
+              items: [ BottomNavigationBarItem(
+                  icon: Icon(Icons.house, size: 35),
+                  title: Text(
+                    "Room",
+                    style: TextStyle(fontSize: 14),
+                  )),
                 BottomNavigationBarItem(
                     icon: Icon(
                       Icons.chat,
-                      size: this.size,
+                      size: 35,
                     ),
                     title: Text(
                       "Chat",
-                      style: TextStyle(fontSize: this.fontSize),
+                      style: TextStyle(fontSize: 14),
                     )),
                 BottomNavigationBarItem(
-                    icon: Icon(Icons.notifications_active_outlined,
-                        size: this.size),
-                    title: Text(
-                      "Thông báo",
-                      style: TextStyle(fontSize: this.fontSize),
+                    icon: Icon(Icons.notifications_active_outlined, size: 35),
+                    title: StreamBuilder<int>(
+                        stream: NotifycationServices().countUnred(AccountServices.id),
+                        builder: (context, snapshot) {
+                          if(snapshot.data==null || snapshot
+                              .hasError||snapshot.connectionState==ConnectionState.waiting){
+                            return Text(
+                              "Thông báo",
+                              style: TextStyle(fontSize: 14),
+                            );
+                          }
+                          return Text(
+                            snapshot.data>0?"Thông báo(${snapshot.data})":"Thông báo",
+                            style: TextStyle(fontSize: 14),
+                          );
+                        }
                     )),
                 BottomNavigationBarItem(
-                    icon: Icon(Icons.person_pin, size: this.size),
+                    icon: Icon(Icons.person_pin, size: 35),
                     title: Text(
                       "Tài khoản",
-                      style: TextStyle(fontSize: this.fontSize),
-                    )),
-              ],
+                      style: TextStyle(fontSize: 14),
+                    )),],
               onTap: (int index) {
                 _selectTab(pageKeys[index], index);
               },
@@ -181,8 +277,15 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
-
   void _selectTab(String tabItem, int index) {
+
+    if(tabItem=='Page3'){
+      count=true;
+    }
+    if(count==true&&tabItem!='Page3'){
+      count=false;
+      NotifycationServices().readingNotify(AccountServices.id);
+    }
     if (tabItem == _currentPage) {
       _navigatorKeys[tabItem].currentState.popUntil((route) => route.isFirst);
     } else {
