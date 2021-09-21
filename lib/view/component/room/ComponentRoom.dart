@@ -1,5 +1,5 @@
 import 'package:camtu_app/model/Room.dart';
-import 'package:camtu_app/view/component/room/SystemRoomPage.dart';
+import 'package:camtu_app/view/page/room/SystemRoomPage.dart';
 import 'package:flutter/material.dart';
 
 class ComponentRoom extends StatefulWidget {

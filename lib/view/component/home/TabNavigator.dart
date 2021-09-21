@@ -1,8 +1,8 @@
 import 'package:camtu_app/model/UserAccount.dart';
-import 'package:camtu_app/view/page/ListRoomPage.dart';
-import 'package:camtu_app/view/page/NotifycationPage.dart';
-import 'package:camtu_app/view/page/PersonalPage.dart';
-import 'package:camtu_app/view/page/TrickPage.dart';
+import 'package:camtu_app/view/page/home/ListRoomPage.dart';
+import 'package:camtu_app/view/page/home/NotifycationPage.dart';
+import 'package:camtu_app/view/page/user/PersonalPage.dart';
+import 'package:camtu_app/view/page/user/TrickPage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 

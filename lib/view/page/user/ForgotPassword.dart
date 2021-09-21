@@ -1,16 +1,16 @@
 import 'dart:async';
 
-import 'package:camtu_app/model/Input.dart';
+import 'package:camtu_app/view/component/static/Input.dart';
 import 'package:camtu_app/model/UserAccount.dart';
 import 'package:camtu_app/view/component/static/DatePicker.dart';
 import 'package:camtu_app/view/component/static/InputEmail.dart';
 import 'package:camtu_app/view/component/static/InputPassword.dart';
-import 'package:camtu_app/view/page/GetPasswordPage.dart';
-import 'package:camtu_app/view/services/UserServices.dart';
+import 'package:camtu_app/view/page/user/GetPasswordPage.dart';
+import 'package:camtu_app/services/UserServices.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import '../component/static/InputCo.dart';
+import '../../component/static/InputCo.dart';
 
 class OtpPage2 extends StatefulWidget {
   final String id;

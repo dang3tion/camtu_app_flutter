@@ -6,8 +6,8 @@ import 'package:camtu_app/view/component/turple/CompareQuoteComponent.dart';
 import 'package:camtu_app/view/component/turple/CreatingQuoteComponent.dart';
 import 'package:camtu_app/view/component/turple/ImplementQuoteComponent.dart';
 import 'package:camtu_app/view/component/static/Dialog.dart';
-import 'package:camtu_app/view/services/QuoteServices.dart';
-import 'package:camtu_app/view/services/RoomServices.dart';
+import 'package:camtu_app/services/QuoteServices.dart';
+import 'package:camtu_app/services/RoomServices.dart';
 import 'package:flutter/material.dart';
 
 class QuotePage extends StatefulWidget {

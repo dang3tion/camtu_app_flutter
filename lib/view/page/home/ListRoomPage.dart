@@ -1,13 +1,13 @@
-import 'package:camtu_app/model/Input.dart';
+import 'package:camtu_app/view/component/static/Input.dart';
 import 'package:camtu_app/model/Room.dart';
 import 'package:camtu_app/model/UserAccount.dart';
 import 'package:camtu_app/view/component/room/ComponentRoom.dart';
 import 'package:camtu_app/view/component/static/Dialog.dart';
 import 'package:camtu_app/view/component/static/InputCo.dart';
 import 'package:camtu_app/view/component/static/Loading.dart';
-import 'package:camtu_app/view/component/room/SystemRoomPage.dart';
-import 'package:camtu_app/view/services/RoomServices.dart';
-import 'package:camtu_app/view/services/UserServices.dart';
+import 'package:camtu_app/view/page/room/SystemRoomPage.dart';
+import 'package:camtu_app/services/RoomServices.dart';
+import 'package:camtu_app/services/UserServices.dart';
 import 'package:flutter/material.dart';
 
 class ListRoomPage extends StatefulWidget {

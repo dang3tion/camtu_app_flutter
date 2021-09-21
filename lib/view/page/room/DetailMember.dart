@@ -1,10 +1,10 @@
 import 'package:camtu_app/model/UserAccount.dart';
 import 'package:camtu_app/view/component/static/Loading.dart';
-import 'package:camtu_app/view/services/RoomServices.dart';
-import 'package:camtu_app/view/services/UserServices.dart';
+import 'package:camtu_app/services/RoomServices.dart';
+import 'package:camtu_app/services/UserServices.dart';
 import 'package:flutter/material.dart';
 
-import '../static/PersonalDetail.dart';
+import '../../component/static/PersonalDetail.dart';
 
 class UserMember extends StatefulWidget {
   final String roomId;

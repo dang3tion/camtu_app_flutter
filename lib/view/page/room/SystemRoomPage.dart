@@ -1,11 +1,11 @@
 import 'package:camtu_app/model/Room.dart';
-import 'package:camtu_app/view/component/room/DetailMember.dart';
+import 'package:camtu_app/view/page/room/DetailMember.dart';
 import 'package:camtu_app/view/component/home/MenuBottom.dart';
-import 'package:camtu_app/view/component/room/RequestRoom.dart';
-import 'package:camtu_app/view/component/turple/TupleQuotes.dart';
-import 'package:camtu_app/view/component/turple/QuotePage.dart';
-import 'package:camtu_app/view/services/RoomServices.dart';
-import 'package:camtu_app/view/services/UserServices.dart';
+import 'package:camtu_app/view/page/room/RequestRoom.dart';
+import 'package:camtu_app/view/page/room/TupleQuotes.dart';
+import 'package:camtu_app/view/page/room/QuotePage.dart';
+import 'package:camtu_app/services/RoomServices.dart';
+import 'package:camtu_app/services/UserServices.dart';
 import 'package:flutter/material.dart';
 
 

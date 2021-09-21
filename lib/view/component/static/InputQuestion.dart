@@ -1,4 +1,4 @@
-import 'package:camtu_app/model/Input.dart';
+import 'package:camtu_app/view/component/static/Input.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 

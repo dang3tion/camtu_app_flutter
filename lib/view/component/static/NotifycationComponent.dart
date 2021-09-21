@@ -1,6 +1,6 @@
 import 'package:camtu_app/model/Notitfy.dart';
-import 'package:camtu_app/view/services/NotifycationServices.dart';
-import 'package:camtu_app/view/services/UserServices.dart';
+import 'package:camtu_app/services/NotifycationServices.dart';
+import 'package:camtu_app/services/UserServices.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 

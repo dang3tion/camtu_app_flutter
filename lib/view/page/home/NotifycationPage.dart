@@ -6,9 +6,9 @@ import 'package:camtu_app/view/component/static/Dialog.dart';
 import 'package:camtu_app/view/component/static/InputCo.dart';
 import 'package:camtu_app/view/component/static/Loading.dart';
 import 'package:camtu_app/view/component/static/NotifycationComponent.dart';
-import 'package:camtu_app/view/services/NotifycationServices.dart';
-import 'package:camtu_app/view/services/RoomServices.dart';
-import 'package:camtu_app/view/services/UserServices.dart';
+import 'package:camtu_app/services/NotifycationServices.dart';
+import 'package:camtu_app/services/RoomServices.dart';
+import 'package:camtu_app/services/UserServices.dart';
 import 'package:flutter/material.dart';
 
 class NotifycationPage extends StatefulWidget {

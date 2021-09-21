@@ -1,8 +1,8 @@
 import 'package:camtu_app/model/Quote.dart';
 import 'package:camtu_app/model/Turple.dart';
-import 'package:camtu_app/view/component/turple/TupleQuotes.dart';
-import 'package:camtu_app/view/services/QuoteServices.dart';
-import 'package:camtu_app/view/services/RoomServices.dart';
+import 'package:camtu_app/view/page/room/TupleQuotes.dart';
+import 'package:camtu_app/services/QuoteServices.dart';
+import 'package:camtu_app/services/RoomServices.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class TurpleServices {

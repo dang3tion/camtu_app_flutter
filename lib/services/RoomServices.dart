@@ -1,16 +1,15 @@
 import 'dart:math';
 
-import 'package:camtu_app/model/DetailWork.dart';
 import 'package:camtu_app/model/Notitfy.dart';
 import 'package:camtu_app/model/Quote.dart';
 import 'package:camtu_app/model/Room.dart';
 import 'package:camtu_app/model/ScoreDetail.dart';
 import 'package:camtu_app/model/Turple.dart';
 import 'package:camtu_app/model/UserAccount.dart';
-import 'package:camtu_app/view/services/NotifycationServices.dart';
-import 'package:camtu_app/view/services/QuoteServices.dart';
-import 'package:camtu_app/view/services/TurpleServices.dart';
-import 'package:camtu_app/view/services/UserServices.dart';
+import 'package:camtu_app/services/NotifycationServices.dart';
+import 'package:camtu_app/services/QuoteServices.dart';
+import 'package:camtu_app/services/TurpleServices.dart';
+import 'package:camtu_app/services/UserServices.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 

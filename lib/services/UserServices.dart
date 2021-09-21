@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:camtu_app/model/Room.dart';
-import 'package:camtu_app/view/page/RouterPage.dart';
-import 'package:camtu_app/view/services/RoomServices.dart';
+import 'package:camtu_app/view/page/user/RouterPage.dart';
+import 'package:camtu_app/services/RoomServices.dart';
 import 'package:crypto/crypto.dart';
 import 'package:camtu_app/model/UserAccount.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';

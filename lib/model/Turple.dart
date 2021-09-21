@@ -1,4 +1,3 @@
-import 'package:camtu_app/model/DetailWork.dart';
 import 'package:camtu_app/model/Quote.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -12,7 +11,6 @@ class Turple {
   String bornLine;
   String state;
   List<Quote> quotes=[];
-  List<DetailWork> deatailWorks=[];
   Turple(
       { this.id, this.name,
        this.roomId,
@@ -21,7 +19,7 @@ class Turple {
       this.userId,
       this.bornLine,
       this.state,
-       this.quotes,this.deatailWorks});
+       this.quotes});
 
   DateTime getUpDate() {
     return DateTime.parse(this.bornLine);

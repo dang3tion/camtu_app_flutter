@@ -1,6 +1,6 @@
 import 'package:camtu_app/model/UserAccount.dart';
 import 'package:camtu_app/view/component/static/Loading.dart';
-import 'package:camtu_app/view/services/UserServices.dart';
+import 'package:camtu_app/services/UserServices.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

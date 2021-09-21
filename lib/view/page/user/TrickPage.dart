@@ -1,4 +1,4 @@
-import 'package:camtu_app/view/page/NotifycationPage.dart';
+import 'package:camtu_app/view/page/home/NotifycationPage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 

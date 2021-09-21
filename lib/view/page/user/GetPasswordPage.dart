@@ -1,10 +1,10 @@
 import 'dart:math';
 
 import 'package:camtu_app/model/UserAccount.dart';
-import 'package:camtu_app/view/page/ForgotPassword.dart';
-import 'package:camtu_app/view/page/RegistyType.dart';
-import 'package:camtu_app/view/page/RouterPage.dart';
-import 'package:camtu_app/view/services/UserServices.dart';
+import 'package:camtu_app/view/page/user/ForgotPassword.dart';
+import 'package:camtu_app/view/page/user/RegistyType.dart';
+import 'package:camtu_app/view/page/user/RouterPage.dart';
+import 'package:camtu_app/services/UserServices.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -13,7 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'HomePage.dart';
+import '../home/HomePage.dart';
 
 class ResetPasswordPage extends StatefulWidget {
   String phoneNo;

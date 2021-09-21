@@ -1,4 +1,4 @@
-import 'package:camtu_app/view/page/Registy.dart';
+import 'package:camtu_app/view/page/user/Registy.dart';
 import 'package:flutter/material.dart';
 
 class TypeUser extends StatelessWidget {

@@ -1,5 +1,5 @@
 import 'package:camtu_app/model/Quote.dart';
-import 'package:camtu_app/view/services/RoomServices.dart';
+import 'package:camtu_app/services/RoomServices.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class QuoteServices {

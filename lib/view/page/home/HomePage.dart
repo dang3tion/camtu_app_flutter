@@ -4,13 +4,13 @@ import 'package:camtu_app/model/UserAccount.dart';
 import 'package:camtu_app/view/component/room/ComponentRoom.dart';
 import 'package:camtu_app/view/component/home/MenuBottom.dart';
 import 'package:camtu_app/view/component/home/TabNavigator.dart';
-import 'package:camtu_app/view/component/turple/TupleQuotes.dart';
-import 'package:camtu_app/view/page/ListRoomPage.dart';
-import 'package:camtu_app/view/page/PersonalPage.dart';
-import 'package:camtu_app/view/component/room/SystemRoomPage.dart';
-import 'package:camtu_app/view/services/NotifycationServices.dart';
-import 'package:camtu_app/view/services/RoomServices.dart';
-import 'package:camtu_app/view/services/UserServices.dart';
+import 'package:camtu_app/view/page/room/TupleQuotes.dart';
+import 'package:camtu_app/view/page/home/ListRoomPage.dart';
+import 'package:camtu_app/view/page/user/PersonalPage.dart';
+import 'package:camtu_app/view/page/room/SystemRoomPage.dart';
+import 'package:camtu_app/services/NotifycationServices.dart';
+import 'package:camtu_app/services/RoomServices.dart';
+import 'package:camtu_app/services/UserServices.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -63,11 +63,9 @@ class _HomePageState extends State<HomePage> {
   void initState() {
 
     if  (AccountServices.useracount.typeUser == false) {
-      print(AccountServices.useracount.typeUser);
       AccountServices().getListRoom(AccountServices.id).listen((event)async {
         event.forEach((element) {
           element.listen((room) async{
-            print(room.nameRoom);
             await  NotifycationServices()
                 .getStateOfRoom(room.idRoom, AccountServices.id)
                 .then((event) {

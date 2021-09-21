@@ -1,5 +1,5 @@
 import 'dart:ui';
-import 'package:camtu_app/model/Input.dart';
+import 'package:camtu_app/view/component/static/Input.dart';
 import 'package:camtu_app/model/Room.dart';
 import 'package:camtu_app/model/Turple.dart';
 import 'package:camtu_app/model/UserAccount.dart';
@@ -9,15 +9,15 @@ import 'package:camtu_app/view/component/static/Dialog.dart';
 import 'package:camtu_app/view/component/static/InputNumberCount.dart';
 import 'package:camtu_app/view/component/static/Loading.dart';
 import 'package:camtu_app/view/component/turple/ComponentTurple.dart';
-import 'package:camtu_app/view/component/turple/QuotePage.dart';
-import 'package:camtu_app/view/services/RoomServices.dart';
-import 'package:camtu_app/view/services/TurpleServices.dart';
-import 'package:camtu_app/view/services/UserServices.dart';
+import 'package:camtu_app/view/page/room/QuotePage.dart';
+import 'package:camtu_app/services/RoomServices.dart';
+import 'package:camtu_app/services/TurpleServices.dart';
+import 'package:camtu_app/services/UserServices.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 
-import '../static/InputCo.dart';
+import '../../component/static/InputCo.dart';
 
 class TupleQuote extends StatefulWidget {
   final Room room;
